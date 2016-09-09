@@ -1,5 +1,14 @@
-var config = {
-   entry: './main.js',
+const path = require('path');
+
+module.exports = {
+  entry: path.resolve(__dirname, 'app/main.js'),
+
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+    root: [
+      path.resolve('./app')
+    ]
+  },
 
    output: {
       path:'./',
@@ -19,14 +28,18 @@ var config = {
          {
             test: /\.jsx?$/,
             exclude: /node_modules/,
-            loader: 'babel',
+            loader: 'babel-loader',
 
             query: {
                presets: ['es2015', 'react']
             }
          }
       ]
+   },
+
+   node: {
+     fs: 'empty',
+     net: 'empty',
+     tls: 'empty'
    }
 }
-
-module.exports = config;

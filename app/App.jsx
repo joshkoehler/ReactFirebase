@@ -1,15 +1,7 @@
 import React from 'react';
 import Message from './Message.jsx';
-import * as firebase from 'firebase';
 import Input from './Input.jsx';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDzTLJhoMxTNBADq2AOB83rclB2KIrRcEU",
-  authDomain: "chatbox-6e584.firebaseapp.com",
-  databaseURL: "https://chatbox-6e584.firebaseio.com",
-  storageBucket: "chatbox-6e584.appspot.com",
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+import * as messageService from './messageService/client/messageService.js';
 
 const App = React.createClass({
   getInitialState() {
@@ -21,11 +13,15 @@ const App = React.createClass({
   },
 
   componentWillMount() {
-    this.messagesRef = firebaseApp.database().ref('messages');
+    messageService.getMessages(function(messages) {
+      this.setState({messages: messages});
+    }.bind(this));
   },
 
   componentDidMount() {
-    this.listenForItems(this.messagesRef);
+    messageService.listenForMessages(function(messages) {
+      this.setState({messages: messages});
+    }.bind(this));
   },
 
   handleNameChange(event) {
@@ -37,25 +33,7 @@ const App = React.createClass({
   },
 
   clearChat(event) {
-    this.messagesRef.remove();
-  },
-
-  listenForItems(messagesRef) {
-    messagesRef.on('value', (snap) => {
-      // get children as an array
-      var newMessages = [];
-      snap.forEach((child) => {
-        newMessages.push({
-          name: child.val().name,
-          message: child.val().message,
-          _key: child.key
-        });
-      });
-
-      this.setState({
-        messages: newMessages
-      });
-    });
+    messageService.clearMessages();
   },
 
   handleKeyPress(event) {
@@ -63,15 +41,15 @@ const App = React.createClass({
       return;
     }
     if (event.key === 'Enter') {
-      this.messagesRef.push({ name: this.state.name, message: this.state.newMessage });
       this.setState({newMessage: ""});
+      messageService.sendMessage(this.state.name, this.state.newMessage);
     }
   },
 
   render() {
-    const messageDivs = this.state.messages.map((message) => {
-      return <Message message={message}/>;
-    });
+    const messageDivs = this.state.messages.reduce((pre, cur) => {
+      return pre.concat(<Message message={cur}/>);
+    }, []);
 
     return (
       <div>
@@ -84,6 +62,7 @@ const App = React.createClass({
         <Input label={"Name"} value={this.state.name} onChange={this.handleNameChange} />
         <br/>
         <button onClick={this.clearChat}>Clear Chat History</button>
+
       </div>
     );
   }
