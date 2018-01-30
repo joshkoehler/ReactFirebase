@@ -1,5 +1,5 @@
 import Ajax from 'simple-ajax';
-import io from 'socket.io-client/socket.io';
+import io from 'socket.io-client/dist/socket.io';
 
 module.exports = {
   sendMessage: function(posterName, newMessage) {
