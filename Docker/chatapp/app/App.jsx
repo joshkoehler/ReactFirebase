@@ -1,7 +1,7 @@
 import React from 'react';
 import Message from './Message.jsx';
 import Input from './Input.jsx';
-import * as messageService from './messageService/client/messageService.js';
+import * as messageService from '../client/messageService.js';
 
 const App = React.createClass({
   getInitialState() {

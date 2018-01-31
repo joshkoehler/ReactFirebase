@@ -1,6 +1,6 @@
 module.exports = {
   dbConfig: {
-    host: 'localhost',
+    host: 'docker.for.mac.localhost',
     user: 'root',
     password: 'password',
     database: 'chatroom'

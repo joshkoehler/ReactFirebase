@@ -4,7 +4,6 @@
   "description": "test react app",
   "main": "index.js",
   "scripts": {
-    "poststart": "node ./app/messageService/server/server.js",
     "start": "webpack-dev-server --hot &",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
