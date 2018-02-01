@@ -31,4 +31,4 @@ app.get("/listen/socket.io", function(req, res) {
   res.json(poller.poll(require('socket.io')(server, {path: '/listen/socket.io'})));
 });
 
-server.listen(8082, "localhost");
+server.listen(8082, "0.0.0.0");
